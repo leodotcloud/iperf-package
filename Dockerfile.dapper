@@ -1,0 +1,21 @@
+FROM ubuntu:16.04
+# FROM arm=armhf/ubuntu:16.04
+
+ARG DAPPER_HOST_ARCH
+ENV HOST_ARCH=${DAPPER_HOST_ARCH} ARCH=${DAPPER_HOST_ARCH}
+
+RUN apt-get update && apt-get install -y build-essential wget curl iproute2
+
+ARG VERSION=3.2
+ENV VERSION=${VERSION}
+
+RUN wget https://github.com/esnet/iperf/archive/${VERSION}.tar.gz && \
+    tar -xf ${VERSION}.tar.gz -C /
+
+ENV DAPPER_SOURCE /iperf-${VERSION}
+ENV DAPPER_OUTPUT ./dist
+ENV HOME ${DAPPER_SOURCE}
+WORKDIR ${DAPPER_SOURCE}
+
+ENTRYPOINT ["./scripts/entry"]
+CMD ["ci"]

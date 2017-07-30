@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+cd $(dirname $0)/..
+
+ARCH=${ARCH:?"ARCH not set"}
+AESNI=""
+[ "${ARCH}" == "amd64" ] && AESNI="--enable-aesni"
+
+./configure --prefix=/usr && make -j$(nproc) && make DESTDIR=/tmp/iperf install
